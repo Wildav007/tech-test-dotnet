@@ -1,5 +1,6 @@
 ﻿using ClearBank.DeveloperTest.Data;
 using ClearBank.DeveloperTest.Services;
+using ClearBank.DeveloperTest.Strategies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +23,7 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IAccountDataStore, AccountDataStore>();
         }
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<IPaymentStrategyProvider, PaymentStrategyProvider>();
         
         return services;
     }
