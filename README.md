@@ -36,9 +36,28 @@ Observations:
 
 
 ### Refactoring Plan
-1. **Create Baseline Unit Tests:** Create unit tests to prevent any regression during refactoring.
-2. **Introduce Abstractions:** Create an `IAccountDataStore` interface to unify the data access layer.
-3. **Dependency Injection:** Move data store selection and configuration access out of the service and inject the required dependencies via the constructor.
-4. **Validation Strategy Pattern:** Move the validation logic for each into its own class (e.g., `BacsValidator`, `FasterPaymentsValidator`, etc.) implementing a shared interface. `PaymentScheme`
-5. **Unit Testing:** Create a comprehensive test suite covering all logic paths for Bacs, Chaps, and FasterPayments.
-6. **Modernise Configuration:** Replace `ConfigurationManager` with a more modern options pattern (though I will keep the logic compatible with the current requirements).
+1. **Create Baseline Unit Tests:**
+   * Establish a robust suite of unit tests using `AccountBuilder.New()` and `MakePaymentRequestBuilder.New()`.
+   * Ensure full coverage of existing logic to prevent regression.
+
+2. **Introduce Abstractions:**
+   * Implement the `IAccountDataStore` interface to decouple business logic from the persistence layer.
+
+3. **Dependency Injection:**
+   * Refactor `PaymentService` to receive dependencies via the constructor.
+   * Move the data store selection logic and configuration access out of the service methods.
+
+4. **Payment Scheme Strategy Pattern:**
+   * Create an `IPaymentSchemeStrategy` interface.
+   * Implement concrete strategies (e.g., `BacsPaymentStrategy`, `FasterPaymentsStrategy`, `ChapsPaymentStrategy`) to encapsulate validation and execution logic specific to each `PaymentScheme`.
+
+5. **Domain-Driven Design (DDD) Principles:**
+   * Transition the `Account` entity from a passive DTO to a rich domain model.
+   * Encapsulate state changes by adding methods such as `DecreaseBalance(decimal amount)` and `IncreaseBalance(decimal amount)` to the `Account` class to manage business invariants.
+
+6. **Unit Testing:**
+   * Create comprehensive test suites for each individual strategy.
+   * Add unit tests specifically for the `Account` domain logic.
+
+7. **Modernize Configuration:**
+   * Replace `ConfigurationManager` usage with the modern Options pattern (`IOptions<T>`) for improved testability and flexibility.
